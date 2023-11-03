@@ -49,30 +49,61 @@ public class HomeController {
         return "add";
     }
 
-        @PostMapping("/add")
-        public String processAddJobForm (@ModelAttribute @Valid Job newJob,
-                Errors errors, Model model,@RequestParam int employerId, @RequestParam (required = false) List<Integer> skills){
-            if (errors.hasErrors()) {
-                model.addAttribute("title", "Add Job");
-                return "add";
-            }
+
+    @PostMapping("/add")
+    public String processAddJobForm (@ModelAttribute @Valid Job newJob,
+                                     Errors errors, Model model, @RequestParam int employerId, @RequestParam (required = false) List<Integer> skills){
+        System.out.println("Entering processAddJobForm");
+        if (errors.hasErrors()) {
+            System.out.println("Errors detected");
+            model.addAttribute("title", "Add Job");
+            return "add";
+        } else {
             Optional<Employer> result = employerRepository.findById(employerId);
             if (result.isEmpty()) {
+                System.out.println("No employer selected");
                 model.addAttribute("title", "Invalid Employer");
             } else {
                 Employer selectedEmployer = result.get();
                 newJob.setEmployer(selectedEmployer);
                 newJob.setEmployer(selectedEmployer);
             }
-            if (skills.isEmpty() || skills == null){
-            model.addAttribute("title", "No Skills Selected");
-            } else {
             List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
             newJob.setSkills(skillObjs);
+            System.out.println("added skills to new job");
         }
-            jobRepository.save(newJob);
-            return "index";
-        }
+        jobRepository.save(newJob);
+        return "index";
+    }
+
+
+//    @PostMapping("/add")
+//        public String processAddJobForm (@ModelAttribute @Valid Job newJob,
+//                Errors errors, Model model, @RequestParam int employerId, @RequestParam (required = false) List<Integer> skills){
+//        System.out.println("Entering processAddJobForm");
+//        if (errors.hasErrors()) {
+//                System.out.println("Errors detected");
+//                model.addAttribute("title", "Add Job");
+//                return "add";
+//        } else {
+//            Optional<Employer> result = employerRepository.findById(employerId);
+//                if (result.isEmpty()) {
+//                    System.out.println("No employer selected");
+//                    model.addAttribute("title", "Invalid Employer");
+//                } if (skills.isEmpty() || skills == null){
+//                    System.out.println("No skills selected");
+//                    model.addAttribute("title", "No Skills Selected");
+//                }
+//            Employer selectedEmployer = result.get();
+//            newJob.setEmployer(selectedEmployer);
+//            newJob.setEmployer(selectedEmployer);
+//            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+//            newJob.setSkills(skillObjs);
+//            System.out.println("added skills to new job");
+//            }
+//            jobRepository.save(newJob);
+//            return "index";
+//        }
 
     @GetMapping("/view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
