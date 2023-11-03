@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("employers")
+@RequestMapping("/employers")
 public class EmployerController {
     @Autowired
     private EmployerRepository employerRepository;
 
-    @GetMapping("add")
+    @GetMapping("/add")
     public String displayAddEmployerForm(Model model) {
         model.addAttribute(new Employer());
         return "employers/add";
     }
 
-    @PostMapping("add")
+    @PostMapping("/add")
     public String processAddEmployerForm(@ModelAttribute @Valid Employer newEmployer,
                                          Errors errors, Model model) {
 
@@ -34,14 +34,14 @@ public class EmployerController {
         return "redirect:";
     }
 
-    @GetMapping
-    public String displayAllEmployers(Model model) {
+    @GetMapping("/")
+    public String index(Model model) {
         model.addAttribute("title", "Employers");
         model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
     }
 
-    @GetMapping("view/{employerId}")
+    @GetMapping("/view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 
         Optional optEmployer = employerRepository.findById(employerId); //Replace this using the .findById() method with the right argument to look for the given employer object from the data layer.
