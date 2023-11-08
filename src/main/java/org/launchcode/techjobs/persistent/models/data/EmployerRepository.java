@@ -8,3 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployerRepository extends CrudRepository<Employer, Integer> {
 }
+
+//CRUD - create, read, update, delete -- knows these are the actions you will take with a database

@@ -67,7 +67,6 @@ public class HomeController {
             } else {
                 Employer selectedEmployer = result.get();
                 newJob.setEmployer(selectedEmployer);
-                newJob.setEmployer(selectedEmployer);
             }
             List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
             newJob.setSkills(skillObjs);
@@ -78,7 +77,13 @@ public class HomeController {
 
     @GetMapping("/view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
-
+        Optional<Job> result = jobRepository.findById(jobId);
+        if (result.isEmpty()) {
+            model.addAttribute("title", "Invalid Job");
+        } else {
+            Job selectedJob = result.get();
+            model.addAttribute("job", selectedJob);
+        }
             return "view";
     }
 
